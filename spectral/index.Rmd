@@ -1,0 +1,188 @@
+---
+title       : Spectral Leakage 
+subtitle    : Demonstration with Shiny App (JHU Coursera)
+author      : Mike Jaffe
+job         : Cardiorespiratory Consulting, LLC
+framework   : io2012        # {io2012, html5slides, shower, dzslides, ...}
+highlighter : highlight.js  # {highlight.js, prettify, highlight}
+hitheme     : tomorrow      # 
+widgets     : []            # {mathjax, quiz, bootstrap}
+mode        : selfcontained # {standalone, draft}
+knit        : slidify::knit2slides
+---
+
+## Spectral Leakage
+
+**Fourier Analysis** 
+- Waveform approximated by sums of sinusoids
+- Important tool with time series analysis 
+- FFT digital implementation (fft() in R)
+- Assumes sequence repeats (i.e. is periodic) - often leads to discontinuity
+- Windowing used to handle the resulting "spectral leakage"
+
+<img src="C:/Users/mjaffe/Documents/CourseraandOpenEDx/_DataScience(Hopkins)/DevelopingDataProducts/spectral/assets/fig/discont.jpg" alt="Maxim"/>
+(Adapted from Maxim website)
+
+See http://mbjengineering.shinyapps.io/runApp/ to explore these concepts further. 
+
+--- .class #id 
+
+## Ideal Situation (pure sinusoid with no waveform discontinuity)
+
+Over30 db difference between fundamental frequency and surrounding frequencies
+ 
+```{r, echo=FALSE, fig.width = 12, fig.height = 6}
+                offsetdeg    = 0
+                samplingrate = 128
+                leninsec     = 16
+                nbrcycles    = 16
+                windowing    = FALSE
+                HFCycle      = FALSE
+                
+                nbrpts = samplingrate*leninsec
+                offset = offsetdeg*(2*pi)/360
+                
+                indices = nbrcycles*c(0:(nbrpts-1))*(2*pi)/(nbrpts)
+                waveform = sin(indices+offset)
+                
+                
+                # windowing
+                if (windowing) {
+                        # Hanning
+                        windices = c(0:(nbrpts-1))*((2*pi)/(nbrpts-1))
+                        window= 0.5*(1-cos(windices))
+                        waveform = window * waveform  
+                }
+                
+                par( mfrow = c( 1, 2 ) )
+                timeindices = c(0:(nbrpts-1))/samplingrate
+                plot(timeindices,waveform, type='l',xlab="Time(seconds)", col = 'darkgray')
+
+# Fourier Transform
+                finput = waveform - mean(waveform)
+                fftout = fft(finput)
+                realpart = Re(fftout)
+                imagpart = Im(fftout)
+                magn = sqrt (realpart*realpart+imagpart*imagpart)
+                
+                # symmetric - toss half and only plot region around peak
+                ptstoplot = (nbrpts/2)
+                submagn    = magn[1:ptstoplot]
+                maxval = max(submagn)
+                maxpos = which.max(submagn)
+                maxfreq= samplingrate/(maxpos-1)
+                if ((maxpos*2) < ptstoplot) {
+                        ptstoplot =maxpos*2
+                        submagn    = submagn[1:ptstoplot]
+                }
+
+                subindices = (0:(ptstoplot-1))*(samplingrate/nbrpts)
+                logsubmagn = log(submagn)
+                plot(subindices,logsubmagn,ylab="log(Magnitude)",xlab="Frequency(Hz)",type='p')
+                
+``` 
+
+--- .class #id 
+
+## Discontinuity - pure sinusoid with discontinuity
+
+The fundamental frequency difficult to visualize.
+
+```{r, echo=FALSE, fig.width = 12, fig.height = 6}
+
+                samplingrate = 128
+                leninsec     = 16
+                nbrcycles    = 16
+                HFCycle      = TRUE
+                if (HFCycle) nbrcycles = nbrcycles + 0.5 
+                indices = nbrcycles*c(0:(nbrpts-1))*(2*pi)/(nbrpts)
+                waveform = sin(indices+offset)
+                
+                
+                # windowing
+                if (windowing) {
+                        # Hanning
+                        windices = c(0:(nbrpts-1))*((2*pi)/(nbrpts-1))
+                        window= 0.5*(1-cos(windices))
+                        waveform = window * waveform  
+                }
+                
+                par( mfrow = c( 1, 2 ) )
+                timeindices = c(0:(nbrpts-1))/samplingrate
+                plot(timeindices,waveform, type='l',xlab="Time(seconds)", col = 'darkgray')
+
+# Fourier Transform
+                finput = waveform - mean(waveform)
+                fftout = fft(finput)
+                realpart = Re(fftout)
+                imagpart = Im(fftout)
+                magn = sqrt (realpart*realpart+imagpart*imagpart)
+                
+                # symmetric - toss half and only plot region around peak
+                ptstoplot = (nbrpts/2)
+                submagn    = magn[1:ptstoplot]
+                maxval = max(submagn)
+                maxpos = which.max(submagn)
+                maxfreq= samplingrate/(maxpos-1)
+                if ((maxpos*2) < ptstoplot) {
+                        ptstoplot =maxpos*2
+                        submagn    = submagn[1:ptstoplot]
+                }
+
+                subindices = (0:(ptstoplot-1))*(samplingrate/nbrpts)
+                logsubmagn = log(submagn)
+                plot(subindices,logsubmagn,ylab="log(Magnitude)",xlab="Frequency(Hz)",type='p')
+                
+``` 
+
+--- .class #id 
+
+## Windowing - pure sinusiod with discontinuity and Hanning Window Applied
+
+The fundamental is visible with approx. a 10 db decrease in surrounding frequencies.
+
+```{r, echo=FALSE, fig.width = 12, fig.height = 6}
+
+                samplingrate = 128
+                leninsec     = 16
+                nbrcycles    = 16         
+                windowing    = TRUE
+                
+                waveform = sin(indices+offset)
+                
+                
+                # windowing
+                if (windowing) {
+                        # Hanning
+                        windices = c(0:(nbrpts-1))*((2*pi)/(nbrpts-1))
+                        window= 0.5*(1-cos(windices))
+                        waveform = window * waveform  
+                }
+                
+                par( mfrow = c( 1, 2 ) )
+                timeindices = c(0:(nbrpts-1))/samplingrate
+                plot(timeindices,waveform, type='l',xlab="Time(seconds)", col = 'darkgray')
+
+# Fourier Transform
+                finput = waveform - mean(waveform)
+                fftout = fft(finput)
+                realpart = Re(fftout)
+                imagpart = Im(fftout)
+                magn = sqrt (realpart*realpart+imagpart*imagpart)
+                
+                # symmetric - toss half and only plot region around peak
+                ptstoplot = (nbrpts/2)
+                submagn    = magn[1:ptstoplot]
+                maxval = max(submagn)
+                maxpos = which.max(submagn)
+                maxfreq= samplingrate/(maxpos-1)
+                if ((maxpos*2) < ptstoplot) {
+                        ptstoplot =maxpos*2
+                        submagn    = submagn[1:ptstoplot]
+                }
+
+                subindices = (0:(ptstoplot-1))*(samplingrate/nbrpts)
+                logsubmagn = log(submagn)
+                plot(subindices,logsubmagn,ylab="log(Magnitude)",xlab="Frequency(Hz)",type='p')
+                
+``` 

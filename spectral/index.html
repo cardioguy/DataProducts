@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Spectral Leakage</title>
+  <meta charset="utf-8">
+  <meta name="description" content="Spectral Leakage">
+  <meta name="author" content="Mike Jaffe">
+  <meta name="generator" content="slidify" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <link rel="stylesheet" href="libraries/frameworks/io2012/css/default.css" media="all" >
+  <link rel="stylesheet" href="libraries/frameworks/io2012/css/phone.css" 
+    media="only screen and (max-device-width: 480px)" >
+  <link rel="stylesheet" href="libraries/frameworks/io2012/css/slidify.css" >
+  <link rel="stylesheet" href="libraries/highlighters/highlight.js/css/tomorrow.css" />
+  <base target="_blank"> <!-- This amazingness opens all links in a new tab. -->  <link rel=stylesheet href="./assets/css/ribbons.css"></link>
+
+  
+  <!-- Grab CDN jQuery, fall back to local if offline -->
+  <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.7.min.js"></script>
+  <script>window.jQuery || document.write('<script src="libraries/widgets/quiz/js/jquery.js"><\/script>')</script> 
+  <script data-main="libraries/frameworks/io2012/js/slides" 
+    src="libraries/frameworks/io2012/js/require-1.0.8.min.js">
+  </script>
+  
+  
+
+</head>
+<body style="opacity: 0">
+  <slides class="layout-widescreen">
+    
+    <!-- LOGO SLIDE -->
+        <slide class="title-slide segue nobackground">
+  <hgroup class="auto-fadein">
+    <h1>Spectral Leakage</h1>
+    <h2>Demonstration with Shiny App (JHU Coursera)</h2>
+    <p>Mike Jaffe<br/>Cardiorespiratory Consulting, LLC</p>
+  </hgroup>
+  <article></article>  
+</slide>
+    
+
+    <!-- SLIDES -->
+    <slide class="" id="slide-1" style="background:;">
+  <hgroup>
+    <h2>Spectral Leakage</h2>
+  </hgroup>
+  <article data-timings="">
+    <p><strong>Fourier Analysis</strong> </p>
+
+<ul>
+<li>Waveform approximated by sums of sinusoids</li>
+<li>Important tool with time series analysis </li>
+<li>FFT digital implementation (fft() in R)</li>
+<li>Assumes sequence repeats (i.e. is periodic) - often leads to discontinuity</li>
+<li>Windowing used to handle the resulting &quot;spectral leakage&quot;</li>
+</ul>
+
+<p><img src="C:/Users/mjaffe/Documents/CourseraandOpenEDx/_DataScience(Hopkins)/DevelopingDataProducts/spectral/assets/fig/discont.jpg" alt="Maxim"/>
+(Adapted from Maxim website)</p>
+
+<p>See <a href="http://mbjengineering.shinyapps.io/runApp/">http://mbjengineering.shinyapps.io/runApp/</a> to explore these concepts further. </p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="class" id="id" style="background:;">
+  <hgroup>
+    <h2>Ideal Situation (pure sinusoid with no waveform discontinuity)</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>Over30 db difference between fundamental frequency and surrounding frequencies</p>
+
+<p><img src="assets/fig/unnamed-chunk-1.png" alt="plot of chunk unnamed-chunk-1"> </p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="class" id="id" style="background:;">
+  <hgroup>
+    <h2>Discontinuity - pure sinusoid with discontinuity</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>The fundamental frequency difficult to visualize.</p>
+
+<p><img src="assets/fig/unnamed-chunk-2.png" alt="plot of chunk unnamed-chunk-2"> </p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="class" id="id" style="background:;">
+  <hgroup>
+    <h2>Windowing - pure sinusiod with discontinuity and Hanning Window Applied</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>The fundamental is visible with approx. a 10 db decrease in surrounding frequencies.</p>
+
+<p><img src="assets/fig/unnamed-chunk-3.png" alt="plot of chunk unnamed-chunk-3"> </p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+    <slide class="backdrop"></slide>
+  </slides>
+  <div class="pagination pagination-small" id='io2012-ptoc' style="display:none;">
+    <ul>
+      <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=1 title='Spectral Leakage'>
+         1
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=2 title='Ideal Situation (pure sinusoid with no waveform discontinuity)'>
+         2
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=3 title='Discontinuity - pure sinusoid with discontinuity'>
+         3
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=4 title='Windowing - pure sinusiod with discontinuity and Hanning Window Applied'>
+         4
+      </a>
+    </li>
+  </ul>
+  </div>  <!--[if IE]>
+    <script 
+      src="http://ajax.googleapis.com/ajax/libs/chrome-frame/1/CFInstall.min.js">  
+    </script>
+    <script>CFInstall.check({mode: 'overlay'});</script>
+  <![endif]-->
+</body>
+  <!-- Load Javascripts for Widgets -->
+  
+  <!-- LOAD HIGHLIGHTER JS FILES -->
+  <script src="libraries/highlighters/highlight.js/highlight.pack.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <!-- DONE LOADING HIGHLIGHTER JS FILES -->
+   
+  </html>
